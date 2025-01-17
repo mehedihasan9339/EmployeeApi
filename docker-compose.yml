@@ -1,0 +1,33 @@
+﻿version: '3.4'
+
+services:
+  employeeapi:
+    image: employeeapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"  # Map port 5000 on your local machine to port 8080 inside the container
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db.opuserp.com;Initial Catalog=EmployeeDb;Encrypt=False;User ID=sa;Password=**OpUs246##;Pooling=true;Max Pool Size=32700
+    depends_on:
+      - sqlserver
+    networks:
+      - app-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=sa@123456
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+  host:
+    external: true
