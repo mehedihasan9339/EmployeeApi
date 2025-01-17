@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Configure the connection string to the local SQL Server
-string connectionString = "Server=MEHEDI;Database=EmployeeDb;User Id=sa;Password=sa@123456;TrustServerCertificate=True;";
+string connectionString = "Server=db.opuserp.com;Initial Catalog=EmployeeDb;Encrypt=False;User ID=sa;Password=**OpUs246##;Pooling=true;Max Pool Size=32700";
 
 // Add DBContext to the container
 builder.Services.AddDbContext<AppDbContext>(options =>
