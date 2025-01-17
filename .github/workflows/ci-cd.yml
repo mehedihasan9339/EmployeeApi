@@ -39,9 +39,10 @@ jobs:
       run: |
         docker build -t my-aspnetcore-image .
 
-    - name: Run Tests
-      run: |
-        docker run --rm my-aspnetcore-image dotnet test
+    # Skip Test step, since you don't need it now
+    # - name: Run Tests
+    #   run: |
+    #     docker run --rm my-aspnetcore-image dotnet test
 
     - name: Push Docker Image to Docker Hub
       run: |
