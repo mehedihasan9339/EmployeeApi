@@ -29,5 +29,10 @@ namespace EmployeeApi.Controllers
             })
             .ToArray();
         }
+
+        public IActionResult TestApi()
+        {
+            return Ok("API is working");
+        }
     }
 }
