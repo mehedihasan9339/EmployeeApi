@@ -30,6 +30,7 @@ namespace EmployeeApi.Controllers
             .ToArray();
         }
 
+        [HttpGet]
         public IActionResult TestApi()
         {
             return Ok("API is working");
