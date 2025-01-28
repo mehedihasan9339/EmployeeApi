@@ -33,6 +33,7 @@ namespace EmployeeApi.Controllers
         [HttpGet("/api/TestApi")]
         public IActionResult TestApi()
         {
+
             return Ok("API is working fine | OPUS!");
         }
     }
