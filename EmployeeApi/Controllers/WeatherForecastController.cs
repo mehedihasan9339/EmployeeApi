@@ -34,7 +34,6 @@ namespace EmployeeApi.Controllers
         public IActionResult TestApi()
         {
 
-
             return Ok("API is working fine | OPUS Team!");
         }
     }
