@@ -14,6 +14,7 @@ string connectionString = "Server=db.opuserp.com;Initial Catalog=EmployeeDb;Encr
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
