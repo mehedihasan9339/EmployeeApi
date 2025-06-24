@@ -14,7 +14,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Docker Compose - Stop Existing Services
-      run: docker compose down || exit 0
+      shell: pwsh
+      run: |
+        try {
+          docker compose down
+        } catch {
+          Write-Host "docker compose down failed, continuing..."
+        }
 
     - name: Docker Compose - Build and Start
+      shell: pwsh
       run: docker compose up --build -d
