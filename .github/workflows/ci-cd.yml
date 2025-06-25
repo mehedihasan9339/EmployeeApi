@@ -1,9 +1,9 @@
-name: Deploy from publish Branch
+name: Deploy ASP.NET Core without Docker (publishgit)
 
 on:
   push:
     branches:
-      - publish
+      - publishgit
 
 jobs:
   deploy:
@@ -18,14 +18,14 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Build .NET project and publish
+      - name: Build and publish app
         run: |
           dotnet publish ./EmployeeApi/EmployeeApi.csproj -c Release -o ./publish
 
-      - name: Copy publish folder to server
+      - name: Copy published files to server
         run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./publish/ deployuser@192.168.20.155:/D/EmployeeApiPublish/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./publish/ deployuser@192.168.20.155:/D/EmployeeApi/
 
-      - name: Run Docker Compose on server
+      - name: Restart app on server
         run: |
-          ssh deployuser@192.168.20.155 "cd /D/EmployeeApiPublish && docker compose down && docker compose up -d"
+          ssh deployuser@192.168.20.155 "powershell -Command \"Stop-Process -Name dotnet -Force -ErrorAction SilentlyContinue; Start-Process -WindowStyle Hidden -FilePath 'dotnet' -ArgumentList 'D:\\EmployeeApi\\EmployeeApi.dll'\""
