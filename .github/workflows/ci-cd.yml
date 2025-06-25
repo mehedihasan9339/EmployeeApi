@@ -10,21 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
+      - name: Install .NET SDK (if not pre-installed)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - name: Build and publish app
         run: |
           dotnet publish ./EmployeeApi/EmployeeApi.csproj -c Release -o ./publish
 
-      - name: Copy files to server
+      - name: Copy published files to Windows server
         run: |
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./publish/ deployuser@${{ secrets.SERVER_HOST }}:/D/EmployeeApi/
 
-      - name: Restart the app via SSH
+      - name: Restart ASP.NET Core app on server
         run: |
-          ssh deployuser@${{ secrets.SERVER_HOST }} "powershell -Command \"Stop-Process dotnet -Force; Start-Process dotnet -ArgumentList 'D:\\EmployeeApi\\EmployeeApi.dll' -WorkingDirectory 'D:\\EmployeeApi'\""
+          ssh deployuser@${{ secrets.SERVER_HOST }} "powershell -Command \"
+            Stop-Process -Name dotnet -Force -ErrorAction SilentlyContinue;
+            Start-Process -WindowStyle Hidden -FilePath 'dotnet' -ArgumentList 'D:\\EmployeeApi\\EmployeeApi.dll'
+          \""
