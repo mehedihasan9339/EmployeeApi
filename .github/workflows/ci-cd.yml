@@ -1,27 +1,31 @@
-name: Deploy from deploy Branch
+name: Deploy from publish Branch
 
 on:
   push:
     branches:
-      - deploy
+      - publish
 
 jobs:
   deploy:
-    runs-on: self-hosted  # Your Windows Server with Docker and runner
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Docker Compose - Stop Existing Services
-      shell: powershell
-      run: |
-        try {
-          docker compose down
-        } catch {
-          Write-Host "docker compose down failed, continuing..."
-        }
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-    - name: Docker Compose - Build and Start
-      shell: powershell
-      run: docker compose up --build -d
+      - name: Build .NET project and publish
+        run: |
+          dotnet publish ./EmployeeApi/EmployeeApi.csproj -c Release -o ./publish
+
+      - name: Copy publish folder to server
+        run: |
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./publish/ deployuser@192.168.20.155:/D/EmployeeApiPublish/
+
+      - name: Run Docker Compose on server
+        run: |
+          ssh deployuser@192.168.20.155 "cd /D/EmployeeApiPublish && docker compose down && docker compose up -d"
