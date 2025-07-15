@@ -95,7 +95,7 @@ namespace EmployeeApi.Controllers
         }
 
 
-        [HttpGet("test")]
+        [HttpGet("test22")]
         public async Task<IActionResult> TestAPI()
         {
             return Ok("Test API is working!");
