@@ -4,6 +4,15 @@ using EmployeeApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(7171, listenOptions =>
+    {
+        listenOptions.UseHttps(); // Uses dev cert installed by `dotnet dev-certs https --trust`
+    });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
