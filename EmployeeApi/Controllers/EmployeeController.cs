@@ -93,5 +93,11 @@ namespace EmployeeApi.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("test")]
+        public async Task<IActionResult> TestAPI()
+        {
+            return Ok("Test API is working!");
+        }
     }
 }
