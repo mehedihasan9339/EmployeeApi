@@ -100,5 +100,12 @@ namespace EmployeeApi.Controllers
         {
             return Ok("Test API is working!");
         }
+
+
+        [HttpGet("test2")]
+        public async Task<IActionResult> TestAPI2()
+        {
+            return Ok("Test API is working!");
+        }
     }
 }
